@@ -11,10 +11,10 @@
  *   tg create-topic "Name"         Create a forum topic
  */
 
-import { cli } from "@shetty4l/core";
+import { cli, readVersion } from "@shetty4l/core";
 import { cmdCreateTopic, cmdSend, cmdTopics, cmdUpdates } from "../src/cli";
 
-const VERSION = "0.0.0-dev";
+const VERSION = readVersion(import.meta.dir);
 
 const HELP = `tg - Telegram Bot API CLI
 

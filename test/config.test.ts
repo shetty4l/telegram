@@ -1,4 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
+import { mkdtempSync, rmSync } from "fs";
+import { tmpdir } from "os";
+import { join } from "path";
 import {
   type ConfigError,
   getTopicsPath,
@@ -10,15 +13,22 @@ import {
 
 describe("loadTgConfig", () => {
   const originalEnv = { ...process.env };
+  let tempDir: string;
 
   beforeEach(() => {
+    // Create temp dir for XDG config to isolate from real config
+    tempDir = mkdtempSync(join(tmpdir(), "tg-test-"));
+    process.env.XDG_CONFIG_HOME = tempDir;
+
     // Reset env to original state
     for (const key of Object.keys(process.env)) {
-      if (!(key in originalEnv)) {
+      if (!(key in originalEnv) && key !== "XDG_CONFIG_HOME") {
         delete process.env[key];
       }
     }
     Object.assign(process.env, originalEnv);
+    // Re-apply temp dir after restore
+    process.env.XDG_CONFIG_HOME = tempDir;
   });
 
   afterEach(() => {
@@ -29,6 +39,12 @@ describe("loadTgConfig", () => {
       }
     }
     Object.assign(process.env, originalEnv);
+    // Clean up temp dir
+    try {
+      rmSync(tempDir, { recursive: true });
+    } catch {
+      // Ignore cleanup errors
+    }
   });
 
   test("returns error when TELEGRAM_BOT_TOKEN is missing", () => {
