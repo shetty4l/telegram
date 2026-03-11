@@ -1,0 +1,47 @@
+{
+  "name": "@shetty4l/telegram",
+  "version": "0.0.0-dev",
+  "description": "Telegram Bot API client and MarkdownV2 utilities for Bun/TypeScript",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shetty4l/telegram.git"
+  },
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./api": "./src/api.ts",
+    "./format": "./src/format.ts",
+    "./chunker": "./src/chunker.ts",
+    "./config": "./src/config.ts"
+  },
+  "files": [
+    "src/",
+    "bin/"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "bin": {
+    "tg": "bin/tg.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint src/",
+    "format": "biome check --write src/ test/ bin/",
+    "format:check": "biome check src/ test/ bin/",
+    "test": "bun test",
+    "validate": "bun run typecheck && bun run lint && bun run format:check && bun run test",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@shetty4l/core": "latest"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.13",
+    "@types/bun": "latest",
+    "husky": "^9.0.0",
+    "oxlint": "^1.48.0",
+    "typescript": "^5.0.0"
+  }
+}
